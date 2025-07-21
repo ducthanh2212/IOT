@@ -1,96 +1,101 @@
 import { useState } from 'react';
-import { Room, Device } from '../types';
-
-// Utility function to generate unique IDs
-const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-// Mock data ban đầu
-const initialRooms: Room[] = [
-  {
-    id: 'livingroom',
-    name: 'Phòng khách',
-    icon: '🛋',
-    devices: [
-      { id: 'light-1', type: 'light', name: 'Đèn chính', status: 'on', roomId: 'livingroom' },
-      { id: 'sensor-1', type: 'sensor', name: 'Nhiệt độ', status: 'active', roomId: 'livingroom' }
-    ]
-  },
-  {
-    id: 'bedroom',
-    name: 'Phòng ngủ',
-    icon: '🛏',
-    devices: []
-  }
-];
+import { Room, RoomDevices } from '../types';
 
 export const useRoomManagement = () => {
-  const [rooms, setRooms] = useState<Room[]>(initialRooms);
+  const [rooms, setRooms] = useState<Room[]>([
+    {
+      id: 'living-room',
+      name: 'Phòng khách',
+      icon: '🛋️',
+      devices: {
+        lights: [],
+        sensors: [],
+        cameras: [],
+        scenes: [],
+        airConditioners: [],
+        energyManagement: [],
+      },
+    },
+    {
+      id: 'bedroom',
+      name: 'Phòng ngủ',
+      icon: '🛏️',
+      devices: {
+        lights: [],
+        sensors: [],
+        cameras: [],
+        scenes: [],
+        airConditioners: [],
+        energyManagement: [],
+      },
+    },
+  ]);
 
-  const addRoom = (name: string, icon: string): void => {
+  const addRoom = (name: string, icon: string) => {
     const newRoom: Room = {
-      id: generateId(),
+      id: Date.now().toString(),
       name,
       icon,
-      devices: []
+      devices: {
+        lights: [],
+        sensors: [],
+        cameras: [],
+        scenes: [],
+        airConditioners: [],
+        energyManagement: [],
+      },
     };
     setRooms(prev => [...prev, newRoom]);
-    
-    // TODO: Gọi API để lưu vào database
-    console.log('Would call API to add room:', newRoom);
   };
 
-  const addDeviceToRoom = (roomId: string, device: Omit<Device, 'id' | 'roomId'>): void => {
-    const newDevice: Device = {
-      ...device,
-      id: generateId(),
-      roomId
-    };
-
-    setRooms(prev => prev.map(room => 
-      room.id === roomId 
-        ? { ...room, devices: [...room.devices, newDevice] }
-        : room
-    ));
-
-    // TODO: Gọi API để lưu thiết bị vào database
-    console.log('Would call API to add device:', newDevice);
+  const getTotalDevicesCount = (devices: RoomDevices): number => {
+    return devices.lights.length + 
+           devices.sensors.length + 
+           devices.cameras.length + 
+           devices.scenes.length + 
+           devices.airConditioners.length + 
+           devices.energyManagement.length;
   };
 
-  const removeDeviceFromRoom = (roomId: string, deviceId: string): void => {
-    setRooms(prev => prev.map(room => 
-      room.id === roomId 
-        ? { ...room, devices: room.devices.filter(device => device.id !== deviceId) }
-        : room
-    ));
-
-    // TODO: Gọi API để xóa thiết bị khỏi database
-    console.log('Would call API to remove device:', deviceId);
+  const addDeviceToRoom = (roomId: string, device: any) => {
+    setRooms(prev => prev.map(room => {
+      if (room.id !== roomId) return room;
+      
+      const newDevices = { ...room.devices };
+      const deviceType = device.type + 's';
+      
+      if (deviceType in newDevices) {
+        (newDevices as any)[deviceType] = [...(newDevices as any)[deviceType], device];
+      }
+      
+      return { ...room, devices: newDevices };
+    }));
   };
 
-  const removeRoom = (roomId: string): void => {
+  const removeRoom = (roomId: string) => {
     setRooms(prev => prev.filter(room => room.id !== roomId));
-    
-    // TODO: Gọi API để xóa phòng khỏi database
-    console.log('Would call API to remove room:', roomId);
   };
 
-  const updateRoom = (roomId: string, updates: Partial<Pick<Room, 'name' | 'icon'>>): void => {
-    setRooms(prev => prev.map(room => 
-      room.id === roomId 
-        ? { ...room, ...updates }
-        : room
-    ));
-
-    // TODO: Gọi API để cập nhật phòng trong database
-    console.log('Would call API to update room:', roomId, updates);
+  const removeDeviceFromRoom = (roomId: string, deviceId: string) => {
+    setRooms(prev => prev.map(room => {
+      if (room.id !== roomId) return room;
+      
+      const newDevices = { ...room.devices };
+      Object.keys(newDevices).forEach(key => {
+        const deviceKey = key as keyof RoomDevices;
+        (newDevices as any)[deviceKey] = (newDevices as any)[deviceKey].filter((device: any) => device.id !== deviceId);
+      });
+      
+      return { ...room, devices: newDevices };
+    }));
   };
 
   return {
     rooms,
     addRoom,
     addDeviceToRoom,
-    removeDeviceFromRoom,
     removeRoom,
-    updateRoom
+    removeDeviceFromRoom,
+    getTotalDevicesCount,
   };
 };

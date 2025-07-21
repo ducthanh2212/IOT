@@ -23,7 +23,7 @@ const DEVICE_TYPES = [
 ];
 
 const RoomManagementSection: React.FC = () => {
-  const { rooms, addRoom, addDeviceToRoom, removeDeviceFromRoom, removeRoom } = useRoomManagement();
+  const { rooms, addRoom, addDeviceToRoom, removeDeviceFromRoom, removeRoom, getTotalDevicesCount } = useRoomManagement();
   
   console.log('RoomManagementSection rendered, rooms:', rooms);
   
@@ -198,7 +198,7 @@ const RoomManagementSection: React.FC = () => {
                   <span className="room-icon">{room.icon}</span>
                   <div className="room-details">
                     <h4>{room.name}</h4>
-                    <p>{room.devices.length} thiết bị</p>
+                    <p>{getTotalDevicesCount(room.devices)} thiết bị</p>
                   </div>
                 </div>
                 <div className="room-actions">
@@ -220,26 +220,113 @@ const RoomManagementSection: React.FC = () => {
               {/* Devices in room - Show when expanded */}
               {expandedRooms.includes(room.id) && (
                 <div className="devices-list">
-                  {room.devices.length === 0 ? (
+                  {getTotalDevicesCount(room.devices) === 0 ? (
                     <p className="no-devices">Chưa có thiết bị nào trong phòng này</p>
                   ) : (
-                    room.devices.map(device => (
-                      <div key={device.id} className="device-item">
-                        <div className="device-info">
-                          <span className="device-icon">{getDeviceIcon(device.type)}</span>
-                          <div className="device-details">
-                            <span className="device-name">{device.name}</span>
-                            <span className="device-type">({device.type})</span>
+                    <>
+                      {room.devices.lights.map(device => (
+                        <div key={device.id} className="device-item">
+                          <div className="device-info">
+                            <span className="device-icon">💡</span>
+                            <div className="device-details">
+                              <span className="device-name">{device.name}</span>
+                              <span className="device-type">(light)</span>
+                            </div>
                           </div>
+                          <button 
+                            onClick={() => handleDeleteDevice(room.id, device.id, device.name)}
+                            className="btn-danger-small"
+                          >
+                            ×
+                          </button>
                         </div>
-                        <button 
-                          onClick={() => handleDeleteDevice(room.id, device.id, device.name)}
-                          className="btn-danger-small"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))
+                      ))}
+                      {room.devices.sensors.map(device => (
+                        <div key={device.id} className="device-item">
+                          <div className="device-info">
+                            <span className="device-icon">📊</span>
+                            <div className="device-details">
+                              <span className="device-name">{device.name}</span>
+                              <span className="device-type">(sensor)</span>
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteDevice(room.id, device.id, device.name)}
+                            className="btn-danger-small"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                      {room.devices.cameras.map(device => (
+                        <div key={device.id} className="device-item">
+                          <div className="device-info">
+                            <span className="device-icon">📹</span>
+                            <div className="device-details">
+                              <span className="device-name">{device.name}</span>
+                              <span className="device-type">(camera)</span>
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteDevice(room.id, device.id, device.name)}
+                            className="btn-danger-small"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                      {room.devices.scenes.map(device => (
+                        <div key={device.id} className="device-item">
+                          <div className="device-info">
+                            <span className="device-icon">🎬</span>
+                            <div className="device-details">
+                              <span className="device-name">{device.name}</span>
+                              <span className="device-type">(scene)</span>
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteDevice(room.id, device.id, device.name)}
+                            className="btn-danger-small"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                      {room.devices.airConditioners.map(device => (
+                        <div key={device.id} className="device-item">
+                          <div className="device-info">
+                            <span className="device-icon">❄️</span>
+                            <div className="device-details">
+                              <span className="device-name">{device.name}</span>
+                              <span className="device-type">(air_conditioner)</span>
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteDevice(room.id, device.id, device.name)}
+                            className="btn-danger-small"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                      {room.devices.energyManagement.map(device => (
+                        <div key={device.id} className="device-item">
+                          <div className="device-info">
+                            <span className="device-icon">⚡</span>
+                            <div className="device-details">
+                              <span className="device-name">{device.name}</span>
+                              <span className="device-type">(energy_management)</span>
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => handleDeleteDevice(room.id, device.id, device.name)}
+                            className="btn-danger-small"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </>
                   )}
                 </div>
               )}

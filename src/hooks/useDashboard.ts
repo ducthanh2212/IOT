@@ -1,95 +1,176 @@
 import { useState, useEffect } from 'react';
-import { DashboardData } from '../types';
-import { getDashboardData, toggleLight, activateScene, setLightBrightness } from '../services/api';
+import { DashboardData, Room } from '../types';
+import { getDashboardData } from '../services/api';
 
 export const useDashboard = () => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState(false);
-  const [actionMessage, setActionMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const dashboardData = await getDashboardData();
-      setData(dashboardData);
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch dashboard data');
-      console.error('Error fetching dashboard data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleToggleLight = async (lightId: string) => {
-    try {
-      setActionLoading(true);
-      setActionMessage('Toggling light...');
-      await toggleLight(lightId);
-      
-      // Refresh data silently without showing main loading
-      const dashboardData = await getDashboardData();
-      setData(dashboardData);
-    } catch (err) {
-      console.error('Error toggling light:', err);
-      setError('Failed to toggle light');
-    } finally {
-      setActionLoading(false);
-      setActionMessage('');
-    }
-  };
-
-  const handleSetBrightness = async (lightId: string, brightness: number) => {
-    try {
-      setActionLoading(true);
-      setActionMessage('Setting brightness...');
-      await setLightBrightness(lightId, brightness);
-      
-      // Refresh data silently without showing main loading
-      const dashboardData = await getDashboardData();
-      setData(dashboardData);
-    } catch (err) {
-      console.error('Error setting brightness:', err);
-      setError('Failed to set brightness');
-    } finally {
-      setActionLoading(false);
-      setActionMessage('');
-    }
-  };
-
-  const handleActivateScene = async (sceneId: string) => {
-    try {
-      setActionLoading(true);
-      setActionMessage('Updating scene...');
-      await activateScene(sceneId);
-      
-      // Refresh data silently without showing main loading
-      const dashboardData = await getDashboardData();
-      setData(dashboardData);
-    } catch (err) {
-      console.error('Error activating scene:', err);
-      setError('Failed to update scene');
-    } finally {
-      setActionLoading(false);
-      setActionMessage('');
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const dashboardData = await getDashboardData();
+        setData(dashboardData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
   }, []);
+
+  const toggleDevice = (deviceId: string) => {
+    if (!data) return;
+
+    const updatedData = { ...data };
+    let deviceFound = false;
+
+    updatedData.rooms.forEach((room: Room) => {
+      // Check lights
+      room.devices.lights.forEach((device) => {
+        if (device.id === deviceId) {
+          device.status = device.status === 'on' ? 'off' : 'on';
+          deviceFound = true;
+        }
+      });
+
+      // Check cameras
+      room.devices.cameras.forEach((device) => {
+        if (device.id === deviceId) {
+          device.status = device.status === 'active' ? 'inactive' : 'active';
+          deviceFound = true;
+        }
+      });
+
+      // Check scenes
+      room.devices.scenes.forEach((device) => {
+        if (device.id === deviceId) {
+          device.status = device.status === 'active' ? 'inactive' : 'active';
+          deviceFound = true;
+        }
+      });
+
+      // Check air conditioners
+      room.devices.airConditioners.forEach((device) => {
+        if (device.id === deviceId) {
+          device.status = device.status === 'on' ? 'off' : 'on';
+          deviceFound = true;
+        }
+      });
+    });
+
+    if (deviceFound) {
+      setData(updatedData);
+    }
+  };
+
+  const updateLightBrightness = (deviceId: string, brightness: number) => {
+    if (!data) return;
+
+    const updatedData = { ...data };
+    let deviceFound = false;
+
+    updatedData.rooms.forEach((room: Room) => {
+      room.devices.lights.forEach((device) => {
+        if (device.id === deviceId) {
+          device.brightness = brightness;
+          deviceFound = true;
+        }
+      });
+    });
+
+    if (deviceFound) {
+      setData(updatedData);
+    }
+  };
+
+  const updateAirConditionerTemperature = (deviceId: string, temperature: number) => {
+    if (!data) return;
+
+    const updatedData = { ...data };
+    let deviceFound = false;
+
+    updatedData.rooms.forEach((room: Room) => {
+      room.devices.airConditioners.forEach((device) => {
+        if (device.id === deviceId) {
+          device.temperature = temperature;
+          deviceFound = true;
+        }
+      });
+    });
+
+    if (deviceFound) {
+      setData(updatedData);
+    }
+  };
+
+  const updateAirConditionerMode = (deviceId: string, mode: 'cool' | 'heat' | 'fan' | 'auto') => {
+    if (!data) return;
+
+    const updatedData = { ...data };
+    let deviceFound = false;
+
+    updatedData.rooms.forEach((room: Room) => {
+      room.devices.airConditioners.forEach((device) => {
+        if (device.id === deviceId) {
+          device.mode = mode;
+          deviceFound = true;
+        }
+      });
+    });
+
+    if (deviceFound) {
+      setData(updatedData);
+    }
+  };
+
+  const updateAirConditionerFanSpeed = (deviceId: string, fanSpeed: 'auto' | 'low' | 'medium' | 'high') => {
+    if (!data) return;
+
+    const updatedData = { ...data };
+    let deviceFound = false;
+
+    updatedData.rooms.forEach((room: Room) => {
+      room.devices.airConditioners.forEach((device) => {
+        if (device.id === deviceId) {
+          device.fanSpeed = fanSpeed;
+          deviceFound = true;
+        }
+      });
+    });
+
+    if (deviceFound) {
+      setData(updatedData);
+    }
+  };
 
   return {
     data,
     loading,
-    actionLoading,
-    actionMessage,
     error,
-    refetch: fetchData,
-    toggleLight: handleToggleLight,
-    setBrightness: handleSetBrightness,
-    activateScene: handleActivateScene,
+    toggleDevice,
+    updateLightBrightness,
+    updateAirConditionerTemperature,
+    updateAirConditionerMode,
+    updateAirConditionerFanSpeed,
+    refetch: () => {
+      setError(null);
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const dashboardData = await getDashboardData();
+          setData(dashboardData);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'An error occurred');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    },
   };
 };
