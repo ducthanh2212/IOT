@@ -1,0 +1,360 @@
+/* Device Groups Styles */
+.device-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.device-group {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.device-group:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.group-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.devices-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Device Card Styles */
+.device-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.device-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.device-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.device-card:hover::before {
+  opacity: 1;
+}
+
+.device-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.device-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.device-icon {
+  font-size: 20px;
+  min-width: 24px;
+}
+
+.device-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.device-content {
+  margin: 12px 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.device-status {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.status-text {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-text.on {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-text.off {
+  background: rgba(156, 163, 175, 0.2);
+  color: #9ca3af;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+/* Brightness Control Styles */
+.brightness-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brightness-control label {
+  font-size: 14px;
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+.brightness-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.brightness-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.brightness-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+.brightness-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* AC Controls Styles */
+.ac-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ac-control-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ac-control-row label {
+  font-size: 14px;
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+.temp-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.temp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #06b6d4, #0891b2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.temp-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+}
+
+.temp-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #06b6d4, #0891b2);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.ac-select {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ac-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.ac-select:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #4facfe;
+  box-shadow: 0 0 0 2px rgba(79, 172, 254, 0.2);
+}
+
+.ac-select option {
+  background: #1f2937;
+  color: #ffffff;
+  padding: 8px;
+}
+
+.ac-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.temp-slider:disabled,
+.brightness-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Light Card Specific */
+.light-card::before {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
+.light-card:hover::before {
+  opacity: 1;
+}
+
+/* AC Card Specific */
+.ac-card::before {
+  background: linear-gradient(90deg, #06b6d4, #0891b2);
+}
+
+.ac-card:hover::before {
+  opacity: 1;
+}
+
+/* Other Device Card Specific */
+.other-card::before {
+  background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+}
+
+.other-card:hover::before {
+  opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .devices-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .device-group {
+    padding: 16px;
+  }
+
+  .group-title {
+    font-size: 16px;
+  }
+
+  .device-card {
+    padding: 12px;
+  }
+
+  .device-name {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .device-groups {
+    gap: 16px;
+  }
+
+  .device-group {
+    padding: 12px;
+  }
+
+  .group-title {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .ac-control-row {
+    gap: 4px;
+  }
+
+  .ac-control-row label {
+    font-size: 13px;
+  }
+
+  .brightness-control label {
+    font-size: 13px;
+  }
+}

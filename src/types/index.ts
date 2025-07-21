@@ -1,79 +1,51 @@
-export interface Device {
-  id: string;
-  name: string;
-  type: 'light' | 'sensor' | 'camera' | 'scene' | 'air_conditioner' | 'energy_management';
-  status: 'on' | 'off' | 'active' | 'inactive';
-  roomId: string;
-}
-
-export interface LightDevice extends Device {
-  type: 'light';
-  brightness?: number;
-  color?: string;
-}
-
-export interface SensorDevice extends Device {
-  type: 'sensor';
-  value: string;
-  unit?: string;
-  icon?: string;
-}
-
-export interface CameraDevice extends Device {
-  type: 'camera';
-  streamUrl?: string;
-  thumbnailUrl?: string;
-}
-
-export interface SceneDevice extends Device {
-  type: 'scene';
-  description?: string;
-}
-
-export interface AirConditionerDevice extends Device {
-  type: 'air_conditioner';
-  temperature: number; // 16-30°C
-  mode: 'cool' | 'heat' | 'fan' | 'auto';
-  fanSpeed: 'low' | 'medium' | 'high' | 'auto';
-}
-
-export interface EnergyDevice extends Device {
-  type: 'energy_management';
-  powerConsumption: number; // Watts
-  dailyUsage: number; // kWh
-  monthlyCost: number; // VND
-}
-
-export interface RoomDevices {
-  lights: LightDevice[];
-  sensors: SensorDevice[];
-  cameras: CameraDevice[];
-  scenes: SceneDevice[];
-  airConditioners: AirConditionerDevice[];
-  energyManagement: EnergyDevice[];
-}
-
 export interface Room {
   id: string;
   name: string;
   icon: string;
-  devices: RoomDevices;
+  temperature: number;
+  humidity: number;
+  energy: {
+    power: number;
+    voltage: number;
+    co2: number;
+  };
+  lights: LightDevice[];
+  acs: ACDevice[];
+  others: OtherDevice[];
 }
 
-export interface GlobalStats {
-  totalPowerConsumption: number;
-  totalMonthlyCost: number;
-  activeDevices: number;
-  totalDevices: number;
+export interface LightDevice {
+  id: string;
+  name: string;
+  type: 'light';
+  status: 'on' | 'off';
+  brightness: number;
+}
+
+export interface ACDevice {
+  id: string;
+  name: string;
+  type: 'ac';
+  status: 'on' | 'off';
+  mode: 'cool' | 'heat' | 'fan' | 'auto';
+  fan: 'low' | 'medium' | 'high';
+  temperature: number;
+}
+
+export interface OtherDevice {
+  id: string;
+  name: string;
+  type: 'tv' | 'fan' | 'speaker' | 'other';
+  status: 'on' | 'off';
+}
+
+export interface RoomDevices {
+  lights: LightDevice[];
+  acs: ACDevice[];
+  others: OtherDevice[];
 }
 
 export interface DashboardData {
   rooms: Room[];
-  globalStats: GlobalStats;
-}
-
-export interface User {
-  name: string;
-  avatar?: string;
-  isDarkMode: boolean;
+  devices: Record<string, RoomDevices>;
 }

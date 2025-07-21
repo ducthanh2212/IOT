@@ -1,33 +1,26 @@
 import React from 'react';
 
-type ToggleSwitchProps = {
+interface ToggleSwitchProps {
   isOn: boolean;
   onToggle: () => void;
-  size?: 'small' | 'medium' | 'large';
   disabled?: boolean;
-  label?: string;
-};
+  size?: 'small' | 'medium' | 'large';
+}
 
-const ToggleSwitch = ({ 
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ 
   isOn, 
   onToggle, 
-  size = 'medium', 
-  disabled = false, 
-  label 
-}: ToggleSwitchProps) => {
+  disabled = false,
+  size = 'medium'
+}) => {
   return (
-    <div className={`toggle-switch-container ${size}`}>
-      {label && <span className="toggle-label">{label}</span>}
-      <button
-        className={`toggle-switch ${isOn ? 'on' : 'off'} ${size} ${disabled ? 'disabled' : ''}`}
-        onClick={onToggle}
-        disabled={disabled}
-        aria-label={label || (isOn ? 'Turn off' : 'Turn on')}
-      >
-        <span className="toggle-slider">
-          <span className="toggle-thumb"></span>
-        </span>
-      </button>
+    <div 
+      className={`toggle-switch ${size} ${isOn ? 'on' : 'off'} ${disabled ? 'disabled' : ''}`}
+      onClick={disabled ? undefined : onToggle}
+    >
+      <div className="toggle-slider">
+        <div className="toggle-thumb" />
+      </div>
     </div>
   );
 };
